@@ -1,0 +1,6 @@
+{
+    "serviceName": "checkout",
+    "http.response.status_code": 500,
+    "count": 42
+  }
+  

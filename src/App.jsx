@@ -1,9 +1,10 @@
-import React from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import Overview from './Overview'
-import FeatureSetGraphOTel from './FeatureSetGraphOTel'
-import ImpactMode from './ImpactMode'
-import ImpactAnalysis from './ImpactAnalysis'
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Overview from "./Overview";
+import FeatureSetGraphOTel from "./FeatureSetGraphOTel";
+import ImpactMode from "./ImpactMode";
+import ImpactAnalysis from "./ImpactAnalysis";
+import TracingScreen from "./TracingScreen";
 
 export default function App() {
   return (
@@ -14,8 +15,9 @@ export default function App() {
           <Route path="/graph" element={<FeatureSetGraphOTel />} />
           <Route path="/impact-mode" element={<ImpactMode />} />
           <Route path="/impact-analysis" element={<ImpactAnalysis />} />
+          <Route path="/tracing" element={<TracingScreen />} />
         </Routes>
       </div>
     </Router>
-  )
+  );
 }

@@ -1,0 +1,32 @@
+{
+  "traceId": "0x9e639426dcab08997d62035b722d5189",
+  "spanId": "999079786583621150",
+  "parentSpanId": "0",
+  "serviceName": "hp-udr-adapter",
+  "operationName": "GET /hpudradapter/management/prometheus",
+  "startTime": "2025-09-17T08:12:34.567Z",
+  "duration_ms": 8300,
+
+  "http.request.method": "GET",
+  "url.full": "/hpudradapter/management/prometheus",
+  "http.response.status_code": 200,
+  "span.kind": "server",
+  "host.name": "4b9f646f4520",
+  "service.instance.id": "55ffa9f3-f126-4bad-b5b1-754ee270e65f",
+
+  "attributes": {
+    "container.id": "4b9f646f4520a308ac8231c7d9889f2b...",
+    "os.description": "Linux 4.18.0-553.8.1.el8_10.x86_64",
+    "process.runtime.version": "11.0.10+9",
+    "telemetry.sdk.version": "1.54.0",
+    "...": "..."
+  },
+
+  "ml": {
+    "anomaly_score": 0.91,
+    "anomaly_flag": true,
+    "cluster_id": 2,
+    "expected_ms": 4200,
+    "delta_ms": 4100
+  }
+}

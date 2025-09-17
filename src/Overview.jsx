@@ -151,6 +151,31 @@ export default function Overview() {
           >
             Impact Analysis
           </button>
+          <button
+            onClick={() => navigate('/tracing')}
+            style={{
+              fontSize: '14px',
+              fontWeight: 500,
+              padding: '8px 16px',
+              borderRadius: '8px',
+              border: '1px solid #d1d5db',
+              background: '#fff',
+              color: '#374151',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+              whiteSpace: 'nowrap'
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.backgroundColor = '#f9fafb';
+              e.target.style.borderColor = '#9ca3af';
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.backgroundColor = '#fff';
+              e.target.style.borderColor = '#d1d5db';
+            }}
+          >
+           Tracing
+          </button>
         </div>
         <div style={{
           marginLeft: 'auto',

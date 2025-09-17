@@ -1,0 +1,9 @@
+{
+    "traceId": "0x9e639426dcab08997d62035b722d5189",
+    "span_count": 18,
+    "anom_count": 3,
+    "trace_anom_max": 0.96,
+    "trace_anom_mean": 0.21,
+    "trace_anomaly_flag": true
+  }
+  
