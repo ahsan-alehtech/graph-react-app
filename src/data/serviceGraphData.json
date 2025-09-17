@@ -1,0 +1,23 @@
+{
+  "nodes": [
+    { "id": "api-gateway", "kind": "service", "componentType": "api-gateway" },
+    { "id": "users", "kind": "service", "componentType": "service" },
+    { "id": "orders", "kind": "service", "componentType": "service" },
+    { "id": "payments", "kind": "service", "componentType": "kestrel" },
+    { "id": "notifications", "kind": "service", "componentType": "pulsar" },
+    { "id": "database", "kind": "database", "componentType": "oracle" },
+    { "id": "cache", "kind": "database", "componentType": "redis" }
+  ],
+  "edges": [
+    { "source": "api-gateway", "target": "users", "rps": 120, "errorRate": 0.004, "p95ms": 45 },
+    { "source": "api-gateway", "target": "orders", "rps": 85, "errorRate": 0.002, "p95ms": 35 },
+    { "source": "api-gateway", "target": "payments", "rps": 60, "errorRate": 0.008, "p95ms": 65 },
+    { "source": "users", "target": "database", "rps": 95, "errorRate": 0.001, "p95ms": 25 },
+    { "source": "users", "target": "cache", "rps": 150, "errorRate": 0.0, "p95ms": 10 },
+    { "source": "orders", "target": "database", "rps": 70, "errorRate": 0.003, "p95ms": 30 },
+    { "source": "orders", "target": "notifications", "rps": 25, "errorRate": 0.001, "p95ms": 20 },
+    { "source": "payments", "target": "database", "rps": 45, "errorRate": 0.005, "p95ms": 40 },
+    { "source": "notifications", "target": "cache", "rps": 30, "errorRate": 0.0, "p95ms": 15 },
+    { "source": "notifications", "target": "database", "rps": 20, "errorRate": 0.001, "p95ms": 35 }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "featureSets": [
+    {
+      "key": "shopping",
+      "name": "Shopping",
+      "components": [
+        { "id": "orders", "inRps": 50, "outRps": 30 },
+        { "id": "inventory", "inRps": 20, "outRps": 15 },
+        { "id": "shipping", "inRps": 25, "outRps": 10 }
+      ]
+    },
+    {
+      "key": "billing",
+      "name": "Billing & Payments",
+      "components": [
+        { "id": "billing", "inRps": 20, "outRps": 40 },
+        { "id": "payments", "inRps": 15, "outRps": 20 },
+        { "id": "clickhouse", "inRps": 15, "outRps": 25 }
+      ]
+    },
+    {
+      "key": "user",
+      "name": "User & Identity",
+      "components": [
+        { "id": "users", "inRps": 40, "outRps": 25 },
+        { "id": "profile", "inRps": 18, "outRps": 12 },
+        { "id": "auth", "inRps": 22, "outRps": 30 }
+      ]
+    },
+    {
+      "key": "notifications",
+      "name": "Notifications",
+      "components": [
+        { "id": "notifications", "inRps": 12, "outRps": 10 },
+        { "id": "email", "inRps": 6, "outRps": 5 },
+        { "id": "sms", "inRps": 8, "outRps": 4 }
+      ]
+    },
+    {
+      "key": "data",
+      "name": "Data Layer",
+      "components": [
+        { "id": "arangodb", "inRps": 30, "outRps": 45 },
+        { "id": "mongo", "inRps": 25, "outRps": 20 },
+        { "id": "redis-cache", "inRps": 40, "outRps": 35 }
+      ]
+    },
+    {
+      "key": "ops",
+      "name": "Ops & Observability",
+      "components": [
+        { "id": "analytics", "inRps": 22, "outRps": 18 },
+        { "id": "logs", "inRps": 14, "outRps": 12 },
+        { "id": "monitoring", "inRps": 19, "outRps": 16 }
+      ]
+    }
+  ],
+  "envOptions": ["QA2", "staging", "POD2", "POD3"],
+  "statusThresholds": {
+    "crit": { "inRps": 20, "outRps": 30 },
+    "warn": { "inRps": 10, "outRps": 15 }
+  }
+}

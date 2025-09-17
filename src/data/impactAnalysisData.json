@@ -1,0 +1,96 @@
+{
+  "nodes": [
+    { "id": "web-app", "kind": "service", "componentType": "api-gateway" },
+    { "id": "mobile-api", "kind": "service", "componentType": "api-gateway" },
+    { "id": "admin-portal", "kind": "service", "componentType": "api-gateway" },
+    { "id": "api-gateway", "kind": "service", "componentType": "api-gateway" },
+    
+    { "id": "user-service", "kind": "service", "componentType": "service" },
+    { "id": "auth-service", "kind": "service", "componentType": "service" },
+    { "id": "order-service", "kind": "service", "componentType": "service" },
+    { "id": "inventory-service", "kind": "service", "componentType": "service" },
+    { "id": "payment-service", "kind": "service", "componentType": "service" },
+    { "id": "shipping-service", "kind": "service", "componentType": "service" },
+    { "id": "notification-service", "kind": "service", "componentType": "service" },
+    { "id": "analytics-service", "kind": "service", "componentType": "service" },
+    { "id": "recommendation-service", "kind": "service", "componentType": "service" },
+    { "id": "search-service", "kind": "service", "componentType": "service" },
+    { "id": "catalog-service", "kind": "service", "componentType": "service" },
+    { "id": "cart-service", "kind": "service", "componentType": "service" },
+    
+    { "id": "payment-processor", "kind": "worker", "componentType": "kestrel" },
+    { "id": "email-worker", "kind": "worker", "componentType": "kestrel" },
+    
+    { "id": "order-events", "kind": "messaging", "componentType": "pulsar" },
+    { "id": "payment-events", "kind": "messaging", "componentType": "pulsar" },
+    { "id": "user-events", "kind": "messaging", "componentType": "pulsar" },
+    { "id": "notification-queue", "kind": "messaging", "componentType": "pulsar" },
+    
+    { "id": "user-db", "kind": "database", "componentType": "oracle" },
+    { "id": "order-db", "kind": "database", "componentType": "oracle" },
+    { "id": "payment-db", "kind": "database", "componentType": "oracle" },
+    { "id": "analytics-db", "kind": "database", "componentType": "oracle" },
+    { "id": "catalog-db", "kind": "database", "componentType": "oracle" },
+    { "id": "inventory-db", "kind": "database", "componentType": "oracle" },
+    
+    { "id": "session-cache", "kind": "cache", "componentType": "redis" },
+    { "id": "product-cache", "kind": "cache", "componentType": "redis" },
+    { "id": "user-cache", "kind": "cache", "componentType": "redis" },
+    { "id": "recommendation-cache", "kind": "cache", "componentType": "redis" },
+    { "id": "search-cache", "kind": "cache", "componentType": "redis" },
+    { "id": "cart-cache", "kind": "cache", "componentType": "redis" }
+  ],
+  "edges": [
+    { "source": "web-app", "target": "api-gateway", "rps": 500, "errorRate": 0.002, "p95ms": 25 },
+    { "source": "mobile-api", "target": "api-gateway", "rps": 300, "errorRate": 0.003, "p95ms": 30 },
+    { "source": "admin-portal", "target": "api-gateway", "rps": 50, "errorRate": 0.001, "p95ms": 20 },
+
+    { "source": "api-gateway", "target": "auth-service", "rps": 850, "errorRate": 0.001, "p95ms": 15 },
+    { "source": "api-gateway", "target": "user-service", "rps": 400, "errorRate": 0.002, "p95ms": 35 },
+    { "source": "api-gateway", "target": "order-service", "rps": 200, "errorRate": 0.003, "p95ms": 45 },
+    { "source": "api-gateway", "target": "catalog-service", "rps": 600, "errorRate": 0.002, "p95ms": 30 },
+    { "source": "api-gateway", "target": "cart-service", "rps": 400, "errorRate": 0.002, "p95ms": 25 },
+
+    { "source": "auth-service", "target": "user-db", "rps": 850, "errorRate": 0.001, "p95ms": 20 },
+    { "source": "auth-service", "target": "session-cache", "rps": 1000, "errorRate": 0.001, "p95ms": 5 },
+
+    { "source": "user-service", "target": "user-db", "rps": 400, "errorRate": 0.002, "p95ms": 25 },
+    { "source": "user-service", "target": "user-cache", "rps": 600, "errorRate": 0.001, "p95ms": 8 },
+    { "source": "user-service", "target": "user-events", "rps": 100, "errorRate": 0.002, "p95ms": 12 },
+
+    { "source": "order-service", "target": "order-db", "rps": 200, "errorRate": 0.003, "p95ms": 35 },
+    { "source": "order-service", "target": "inventory-service", "rps": 180, "errorRate": 0.004, "p95ms": 50 },
+    { "source": "order-service", "target": "payment-service", "rps": 150, "errorRate": 0.003, "p95ms": 60 },
+    { "source": "order-service", "target": "order-events", "rps": 200, "errorRate": 0.002, "p95ms": 15 },
+
+    { "source": "inventory-service", "target": "inventory-db", "rps": 180, "errorRate": 0.003, "p95ms": 40 },
+    { "source": "inventory-service", "target": "product-cache", "rps": 300, "errorRate": 0.002, "p95ms": 10 },
+
+    { "source": "payment-service", "target": "payment-db", "rps": 300, "errorRate": 0.005, "p95ms": 45 },
+    { "source": "payment-service", "target": "payment-events", "rps": 300, "errorRate": 0.003, "p95ms": 18 },
+
+    { "source": "catalog-service", "target": "catalog-db", "rps": 600, "errorRate": 0.002, "p95ms": 35 },
+    { "source": "catalog-service", "target": "product-cache", "rps": 800, "errorRate": 0.001, "p95ms": 8 },
+
+    { "source": "search-service", "target": "catalog-db", "rps": 500, "errorRate": 0.003, "p95ms": 60 },
+    { "source": "search-service", "target": "search-cache", "rps": 700, "errorRate": 0.002, "p95ms": 12 },
+
+    { "source": "cart-service", "target": "cart-cache", "rps": 400, "errorRate": 0.002, "p95ms": 10 },
+    { "source": "cart-service", "target": "inventory-service", "rps": 300, "errorRate": 0.003, "p95ms": 45 },
+
+    { "source": "notification-service", "target": "notification-queue", "rps": 300, "errorRate": 0.002, "p95ms": 25 },
+    { "source": "notification-service", "target": "email-worker", "rps": 200, "errorRate": 0.003, "p95ms": 30 },
+
+    { "source": "analytics-service", "target": "analytics-db", "rps": 300, "errorRate": 0.002, "p95ms": 80 },
+
+    { "source": "order-events", "target": "shipping-service", "rps": 80, "errorRate": 0.003, "p95ms": 25 },
+    { "source": "order-events", "target": "notification-service", "rps": 150, "errorRate": 0.002, "p95ms": 18 },
+
+    { "source": "payment-events", "target": "payment-processor", "rps": 300, "errorRate": 0.004, "p95ms": 40 },
+    { "source": "payment-events", "target": "analytics-service", "rps": 200, "errorRate": 0.002, "p95ms": 22 },
+
+    { "source": "user-events", "target": "recommendation-service", "rps": 80, "errorRate": 0.003, "p95ms": 30 },
+
+    { "source": "recommendation-service", "target": "recommendation-cache", "rps": 200, "errorRate": 0.002, "p95ms": 12 }
+  ]
+}

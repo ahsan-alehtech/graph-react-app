@@ -1,0 +1,261 @@
+{
+  "result": [
+    {
+      "feature_set": "billing core: pod10",
+      "feature": "billing core: pod10",
+      "component": {
+        "_key": "service_billing-api",
+        "_id": "nx_component/service_billing-api",
+        "_rev": "_kTBemAC--D",
+        "name": "billing-api",
+        "type": "service"
+      },
+      "edge": {
+        "source": "nx_feature/billing_core_pod10",
+        "target": "nx_component/service_billing-api",
+        "kind": null,
+        "rps": null,
+        "p95_ms": null,
+        "error_rate": null
+      }
+    },
+    {
+      "feature_set": "billing core: pod10",
+      "feature": "billing core: pod10",
+      "component": {
+        "_key": "cache_cache1",
+        "_id": "nx_component/cache_cache1",
+        "_rev": "_kTBemAC--E",
+        "name": "cache1",
+        "type": "cache"
+      },
+      "edge": {
+        "source": "nx_feature/billing_core_pod10",
+        "target": "nx_component/cache_cache1",
+        "kind": null,
+        "rps": null,
+        "p95_ms": null,
+        "error_rate": null
+      }
+    },
+    {
+      "feature_set": "billing core: pod10",
+      "feature": "billing core: pod10",
+      "component": {
+        "_key": "service_kestrel-edge",
+        "_id": "nx_component/service_kestrel-edge",
+        "_rev": "_kTBemAC--F",
+        "name": "kestrel-edge",
+        "type": "service"
+      },
+      "edge": {
+        "source": "nx_feature/billing_core_pod10",
+        "target": "nx_component/service_kestrel-edge",
+        "kind": null,
+        "rps": null,
+        "p95_ms": null,
+        "error_rate": null
+      }
+    },
+    {
+      "feature_set": "billing core: pod10",
+      "feature": "billing core: pod10",
+      "component": {
+        "_key": "route_kestrel_api_devices",
+        "_id": "nx_component/route_kestrel_api_devices",
+        "_rev": "_kTBemAC--G",
+        "name": "Kestrel:/api/devices",
+        "type": "route"
+      },
+      "edge": {
+        "source": "nx_feature/billing_core_pod10",
+        "target": "nx_component/route_kestrel_api_devices",
+        "kind": null,
+        "rps": null,
+        "p95_ms": null,
+        "error_rate": null
+      }
+    },
+    {
+      "feature_set": "billing core: pod10",
+      "feature": "billing core: pod10",
+      "component": {
+        "_key": "namespace_cc_billing",
+        "_id": "nx_component/namespace_cc_billing",
+        "_rev": "_kTBemAC--H",
+        "name": "Namespace: cc/billing",
+        "type": "namespace"
+      },
+      "edge": {
+        "source": "nx_feature/billing_core_pod10",
+        "target": "nx_component/namespace_cc_billing",
+        "kind": null,
+        "rps": null,
+        "p95_ms": null,
+        "error_rate": null
+      }
+    },
+    {
+      "feature_set": "billing core: pod10",
+      "feature": "billing core: pod10",
+      "component": {
+        "_key": "cluster_pulsar_pod10",
+        "_id": "nx_component/cluster_pulsar_pod10",
+        "_rev": "_kTBemAC--I",
+        "name": "Pulsar Cluster: pod10",
+        "type": "cluster",
+        "sub_type": "pulsar"
+      },
+      "edge": {
+        "source": "nx_feature/billing_core_pod10",
+        "target": "nx_component/cluster_pulsar_pod10",
+        "kind": null,
+        "rps": null,
+        "p95_ms": null,
+        "error_rate": null
+      }
+    },
+    {
+      "feature_set": "billing core: pod10",
+      "feature": "billing core: pod10",
+      "component": {
+        "_key": "service_device-api",
+        "_id": "nx_component/service_device-api",
+        "_rev": "_kTBemAC--J",
+        "name": "device-api",
+        "type": "service"
+      },
+      "edge": {
+        "source": "nx_feature/billing_core_pod10",
+        "target": "nx_component/service_device-api",
+        "kind": null,
+        "rps": null,
+        "p95_ms": null,
+        "error_rate": null
+      }
+    },
+    {
+      "feature_set": "billing core: pod10",
+      "feature": "billing core: pod10",
+      "component": {
+        "_key": "service_rating-worker",
+        "_id": "nx_component/service_rating-worker",
+        "_rev": "_kTBemAC--K",
+        "name": "device-api",
+        "type": "service"
+      },
+      "edge": {
+        "source": "nx_feature/billing_core_pod10",
+        "target": "nx_component/service_rating-worker",
+        "kind": null,
+        "rps": null,
+        "p95_ms": null,
+        "error_rate": null
+      }
+    },
+    {
+      "feature_set": "billing core: pod10",
+      "feature": "billing core: pod10",
+      "component": {
+        "_key": "topic_billing_events",
+        "_id": "nx_component/topic_billing_events",
+        "_rev": "_kTBemAC--L",
+        "name": "pulsar: billing.events",
+        "namespace": "cc/billing",
+        "type": "topic"
+      },
+      "edge": {
+        "source": "nx_feature/billing_core_pod10",
+        "target": "nx_component/topic_billing_events",
+        "kind": null,
+        "rps": null,
+        "p95_ms": null,
+        "error_rate": null
+      }
+    },
+    {
+      "feature_set": "billing core: pod10",
+      "feature": "billing core: pod10",
+      "component": {
+        "_key": "subscription_rating-shared",
+        "_id": "nx_component/subscription_rating-shared",
+        "_rev": "_kTBemAC--M",
+        "name": "sub: rating-shared",
+        "type": "subscription"
+      },
+      "edge": {
+        "source": "nx_feature/billing_core_pod10",
+        "target": "nx_component/subscription_rating-shared",
+        "kind": null,
+        "rps": null,
+        "p95_ms": null,
+        "error_rate": null
+      }
+    },
+    {
+      "feature_set": "billing core: pod10",
+      "feature": "billing core: pod10",
+      "component": {
+        "_key": "keyspace_memcache_prices",
+        "_id": "nx_component/keyspace_memcache_prices",
+        "_rev": "_kTBemAC--N",
+        "name": "sub: rating-shared",
+        "type": "keyspace"
+      },
+      "edge": {
+        "source": "nx_feature/billing_core_pod10",
+        "target": "nx_component/keyspace_memcache_prices",
+        "kind": null,
+        "rps": null,
+        "p95_ms": null,
+        "error_rate": null
+      }
+    },
+    {
+      "feature_set": "billing core: pod10",
+      "feature": "billing core: pod10",
+      "component": {
+        "_key": "table_prvgowner_usage",
+        "_id": "nx_component/table_prvgowner_usage",
+        "_rev": "_kTBemAC--O",
+        "name": "Oracle: PRVGOWNER_USAGE",
+        "type": "table"
+      },
+      "edge": {
+        "source": "nx_feature/billing_core_pod10",
+        "target": "nx_component/table_prvgowner_usage",
+        "kind": null,
+        "rps": null,
+        "p95_ms": null,
+        "error_rate": null
+      }
+    }
+  ],
+  "hasMore": false,
+  "count": 12,
+  "cached": false,
+  "extra": {
+    "warnings": [
+      
+    ],
+    "stats": {
+      "writesExecuted": 0,
+      "writesIgnored": 0,
+      "documentLookups": 1,
+      "seeks": 0,
+      "scannedFull": 14,
+      "scannedIndex": 1,
+      "cursorsCreated": 1,
+      "cursorsRearmed": 0,
+      "cacheHits": 1,
+      "cacheMisses": 0,
+      "filtered": 0,
+      "httpRequests": 0,
+      "executionTime": 0.002600878942757845,
+      "peakMemoryUsage": 229376,
+      "intermediateCommits": 0
+    }
+  },
+  "error": false,
+  "code": 201
+}
