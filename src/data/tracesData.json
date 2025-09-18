@@ -1,0 +1,368 @@
+{
+  "traces": [
+    {
+      "traceId": "0x9e639426dcab08997d62035b722d5189",
+      "serviceName": "hp-udr-adapter",
+      "operationName": "GET /hpudradapter/management/prometheus",
+      "startTime": "2025-09-17T08:12:34.567Z",
+      "duration": 8300,
+      "isAnomaly": true,
+      "anomalyScore": 85,
+      "clusterId": "cluster-001",
+      "hasErrors": false,
+      "spans": [
+        {
+          "spanId": "999079786583621150",
+          "parentSpanId": "0",
+          "serviceName": "hp-udr-adapter",
+          "operationName": "GET /hpudradapter/management/prometheus",
+          "startTime": "2025-09-17T08:12:34.567Z",
+          "duration": 8300,
+          "tags": {
+            "http.request.method": "GET",
+            "url.full": "/hpudradapter/management/prometheus",
+            "http.response.status_code": 200,
+            "span.kind": "server",
+            "host.name": "4b9f646f4520"
+          }
+        },
+        {
+          "spanId": "999079786583621151",
+          "parentSpanId": "999079786583621150",
+          "serviceName": "database",
+          "operationName": "SELECT users",
+          "startTime": "2025-09-17T08:12:35.000Z",
+          "duration": 1200,
+          "tags": {
+            "db.statement": "SELECT * FROM users WHERE id = ?",
+            "db.system": "postgresql",
+            "span.kind": "client"
+          }
+        }
+      ]
+    },
+    {
+      "traceId": "0x8f529315cb9a07886e73024c611c4078",
+      "serviceName": "checkout-service",
+      "operationName": "POST /checkout/process",
+      "startTime": "2025-09-17T08:15:22.123Z",
+      "duration": 12500,
+      "isAnomaly": false,
+      "anomalyScore": 25,
+      "clusterId": "cluster-002",
+      "hasErrors": true,
+      "spans": [
+        {
+          "spanId": "888888888888888888",
+          "parentSpanId": "0",
+          "serviceName": "checkout-service",
+          "operationName": "POST /checkout/process",
+          "startTime": "2025-09-17T08:15:22.123Z",
+          "duration": 12500,
+          "tags": {
+            "http.request.method": "POST",
+            "url.full": "/checkout/process",
+            "http.response.status_code": 500,
+            "span.kind": "server"
+          }
+        }
+      ]
+    },
+    {
+      "traceId": "0xa1b2c3d4e5f6789012345678901234ab",
+      "serviceName": "user-service",
+      "operationName": "GET /users/profile",
+      "startTime": "2025-09-17T08:18:45.789Z",
+      "duration": 4500,
+      "isAnomaly": false,
+      "anomalyScore": 15,
+      "clusterId": "cluster-001",
+      "hasErrors": false,
+      "spans": [
+        {
+          "spanId": "777777777777777777",
+          "parentSpanId": "0",
+          "serviceName": "user-service",
+          "operationName": "GET /users/profile",
+          "startTime": "2025-09-17T08:18:45.789Z",
+          "duration": 4500,
+          "tags": {
+            "http.request.method": "GET",
+            "url.full": "/users/profile",
+            "http.response.status_code": 200,
+            "span.kind": "server"
+          }
+        }
+      ]
+    },
+    {
+      "traceId": "0xb2c3d4e5f6789012345678901234abcd",
+      "serviceName": "payment-gateway",
+      "operationName": "POST /payments/charge",
+      "startTime": "2025-09-17T08:20:15.234Z",
+      "duration": 18500,
+      "isAnomaly": true,
+      "anomalyScore": 92,
+      "clusterId": "cluster-003",
+      "hasErrors": true,
+      "spans": [
+        {
+          "spanId": "666666666666666666",
+          "parentSpanId": "0",
+          "serviceName": "payment-gateway",
+          "operationName": "POST /payments/charge",
+          "startTime": "2025-09-17T08:20:15.234Z",
+          "duration": 18500,
+          "tags": {
+            "http.request.method": "POST",
+            "url.full": "/payments/charge",
+            "http.response.status_code": 400,
+            "span.kind": "server"
+          }
+        },
+        {
+          "spanId": "666666666666666667",
+          "parentSpanId": "666666666666666666",
+          "serviceName": "external-payment-api",
+          "operationName": "POST /api/v1/charge",
+          "startTime": "2025-09-17T08:20:16.000Z",
+          "duration": 12000,
+          "tags": {
+            "http.request.method": "POST",
+            "url.full": "https://api.stripe.com/v1/charges",
+            "http.response.status_code": 400,
+            "span.kind": "client"
+          }
+        }
+      ]
+    },
+    {
+      "traceId": "0xc3d4e5f6789012345678901234abcdef",
+      "serviceName": "inventory-service",
+      "operationName": "GET /inventory/stock",
+      "startTime": "2025-09-17T08:22:30.456Z",
+      "duration": 3200,
+      "isAnomaly": false,
+      "anomalyScore": 8,
+      "clusterId": "cluster-001",
+      "hasErrors": false,
+      "spans": [
+        {
+          "spanId": "555555555555555555",
+          "parentSpanId": "0",
+          "serviceName": "inventory-service",
+          "operationName": "GET /inventory/stock",
+          "startTime": "2025-09-17T08:22:30.456Z",
+          "duration": 3200,
+          "tags": {
+            "http.request.method": "GET",
+            "url.full": "/inventory/stock",
+            "http.response.status_code": 200,
+            "span.kind": "server"
+          }
+        }
+      ]
+    },
+    {
+      "traceId": "0xd4e5f6789012345678901234abcdef12",
+      "serviceName": "notification-service",
+      "operationName": "POST /notifications/send",
+      "startTime": "2025-09-17T08:25:12.789Z",
+      "duration": 7500,
+      "isAnomaly": true,
+      "anomalyScore": 78,
+      "clusterId": "cluster-002",
+      "hasErrors": false,
+      "spans": [
+        {
+          "spanId": "444444444444444444",
+          "parentSpanId": "0",
+          "serviceName": "notification-service",
+          "operationName": "POST /notifications/send",
+          "startTime": "2025-09-17T08:25:12.789Z",
+          "duration": 7500,
+          "tags": {
+            "http.request.method": "POST",
+            "url.full": "/notifications/send",
+            "http.response.status_code": 200,
+            "span.kind": "server"
+          }
+        },
+        {
+          "spanId": "444444444444444445",
+          "parentSpanId": "444444444444444444",
+          "serviceName": "email-service",
+          "operationName": "POST /email/send",
+          "startTime": "2025-09-17T08:25:13.000Z",
+          "duration": 5000,
+          "tags": {
+            "http.request.method": "POST",
+            "url.full": "/email/send",
+            "http.response.status_code": 200,
+            "span.kind": "client"
+          }
+        }
+      ]
+    },
+    {
+      "traceId": "0xe5f6789012345678901234abcdef1234",
+      "serviceName": "auth-service",
+      "operationName": "POST /auth/login",
+      "startTime": "2025-09-17T08:28:45.123Z",
+      "duration": 2100,
+      "isAnomaly": false,
+      "anomalyScore": 12,
+      "clusterId": "cluster-003",
+      "hasErrors": false,
+      "spans": [
+        {
+          "spanId": "333333333333333333",
+          "parentSpanId": "0",
+          "serviceName": "auth-service",
+          "operationName": "POST /auth/login",
+          "startTime": "2025-09-17T08:28:45.123Z",
+          "duration": 2100,
+          "tags": {
+            "http.request.method": "POST",
+            "url.full": "/auth/login",
+            "http.response.status_code": 200,
+            "span.kind": "server"
+          }
+        }
+      ]
+    },
+    {
+      "traceId": "0xf6789012345678901234abcdef123456",
+      "serviceName": "order-service",
+      "operationName": "GET /orders/history",
+      "startTime": "2025-09-17T08:30:20.567Z",
+      "duration": 9800,
+      "isAnomaly": true,
+      "anomalyScore": 88,
+      "clusterId": "cluster-001",
+      "hasErrors": true,
+      "spans": [
+        {
+          "spanId": "222222222222222222",
+          "parentSpanId": "0",
+          "serviceName": "order-service",
+          "operationName": "GET /orders/history",
+          "startTime": "2025-09-17T08:30:20.567Z",
+          "duration": 9800,
+          "tags": {
+            "http.request.method": "GET",
+            "url.full": "/orders/history",
+            "http.response.status_code": 500,
+            "span.kind": "server"
+          }
+        },
+        {
+          "spanId": "222222222222222223",
+          "parentSpanId": "222222222222222222",
+          "serviceName": "database",
+          "operationName": "SELECT orders",
+          "startTime": "2025-09-17T08:30:21.000Z",
+          "duration": 8000,
+          "tags": {
+            "db.statement": "SELECT * FROM orders WHERE user_id = ?",
+            "db.system": "postgresql",
+            "span.kind": "client"
+          }
+        }
+      ]
+    },
+    {
+      "traceId": "0x789012345678901234abcdef12345678",
+      "serviceName": "analytics-service",
+      "operationName": "POST /analytics/track",
+      "startTime": "2025-09-17T08:32:10.890Z",
+      "duration": 1500,
+      "isAnomaly": false,
+      "anomalyScore": 5,
+      "clusterId": "cluster-002",
+      "hasErrors": false,
+      "spans": [
+        {
+          "spanId": "111111111111111111",
+          "parentSpanId": "0",
+          "serviceName": "analytics-service",
+          "operationName": "POST /analytics/track",
+          "startTime": "2025-09-17T08:32:10.890Z",
+          "duration": 1500,
+          "tags": {
+            "http.request.method": "POST",
+            "url.full": "/analytics/track",
+            "http.response.status_code": 200,
+            "span.kind": "server"
+          }
+        }
+      ]
+    },
+    {
+      "traceId": "0x89012345678901234abcdef123456789",
+      "serviceName": "recommendation-engine",
+      "operationName": "GET /recommendations/user",
+      "startTime": "2025-09-17T08:35:05.234Z",
+      "duration": 12500,
+      "isAnomaly": true,
+      "anomalyScore": 95,
+      "clusterId": "cluster-003",
+      "hasErrors": false,
+      "spans": [
+        {
+          "spanId": "000000000000000000",
+          "parentSpanId": "0",
+          "serviceName": "recommendation-engine",
+          "operationName": "GET /recommendations/user",
+          "startTime": "2025-09-17T08:35:05.234Z",
+          "duration": 12500,
+          "tags": {
+            "http.request.method": "GET",
+            "url.full": "/recommendations/user",
+            "http.response.status_code": 200,
+            "span.kind": "server"
+          }
+        },
+        {
+          "spanId": "000000000000000001",
+          "parentSpanId": "000000000000000000",
+          "serviceName": "ml-model-service",
+          "operationName": "POST /models/predict",
+          "startTime": "2025-09-17T08:35:06.000Z",
+          "duration": 10000,
+          "tags": {
+            "http.request.method": "POST",
+            "url.full": "/models/predict",
+            "http.response.status_code": 200,
+            "span.kind": "client"
+          }
+        }
+      ]
+    }
+  ],
+  "services": [
+    "hp-udr-adapter",
+    "checkout-service",
+    "user-service",
+    "payment-gateway",
+    "inventory-service",
+    "notification-service",
+    "auth-service",
+    "order-service",
+    "analytics-service",
+    "recommendation-engine"
+  ],
+  "operations": [
+    "GET /hpudradapter/management/prometheus",
+    "POST /checkout/process",
+    "GET /users/profile",
+    "POST /payments/charge",
+    "GET /inventory/stock",
+    "POST /notifications/send",
+    "POST /auth/login",
+    "GET /orders/history",
+    "POST /analytics/track",
+    "GET /recommendations/user"
+  ],
+  "clusters": ["cluster-001", "cluster-002", "cluster-003"]
+}

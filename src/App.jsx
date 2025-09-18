@@ -5,6 +5,7 @@ import FeatureSetGraphOTel from "./FeatureSetGraphOTel";
 import ImpactMode from "./ImpactMode";
 import ImpactAnalysis from "./ImpactAnalysis";
 import TracingScreen from "./TracingScreen";
+import JaegerLikeTraceViewerReactSingleFile from "./JaegerLikeTraceViewerReactSingleFile";
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
           <Route path="/impact-mode" element={<ImpactMode />} />
           <Route path="/impact-analysis" element={<ImpactAnalysis />} />
           <Route path="/tracing" element={<TracingScreen />} />
+          <Route path="/jaeger-trace-viewer" element={<JaegerLikeTraceViewerReactSingleFile />} />
         </Routes>
       </div>
     </Router>

@@ -2,88 +2,14 @@ import React, { useState, useEffect, useMemo } from "react";
 
 import { useNavigate } from "react-router-dom";
 import { Search, Clock, Filter, ChevronDown, ChevronRight, Copy, ExternalLink } from "lucide-react";
+import tracesData from "./data/tracesData.json";
+import { SpansList } from "./components";
 
-// Mock trace data - replace with actual API calls
-const mockTraces = [
-  {
-    traceId: "0x9e639426dcab08997d62035b722d5189",
-    serviceName: "hp-udr-adapter",
-    operationName: "GET /hpudradapter/management/prometheus",
-    startTime: "2025-09-17T08:12:34.567Z",
-    duration: 8300,
-    spans: [
-      {
-        spanId: "999079786583621150",
-        parentSpanId: "0",
-        serviceName: "hp-udr-adapter",
-        operationName: "GET /hpudradapter/management/prometheus",
-        startTime: "2025-09-17T08:12:34.567Z",
-        duration: 8300,
-        tags: {
-          "http.request.method": "GET",
-          "url.full": "/hpudradapter/management/prometheus",
-          "http.response.status_code": 200,
-          "span.kind": "server",
-          "host.name": "4b9f646f4520",
-        },
-      },
-      {
-        spanId: "999079786583621151",
-        parentSpanId: "999079786583621150",
-        serviceName: "database",
-        operationName: "SELECT users",
-        startTime: "2025-09-17T08:12:35.000Z",
-        duration: 1200,
-        tags: {
-          "db.statement": "SELECT * FROM users WHERE id = ?",
-          "db.system": "postgresql",
-          "span.kind": "client",
-        },
-      },
-    ],
-  },
-  {
-    traceId: "0x8f529315cb9a07886e73024c611c4078",
-    serviceName: "checkout-service",
-    operationName: "POST /checkout/process",
-    startTime: "2025-09-17T08:15:22.123Z",
-    duration: 12500,
-    spans: [
-      {
-        spanId: "888888888888888888",
-        parentSpanId: "0",
-        serviceName: "checkout-service",
-        operationName: "POST /checkout/process",
-        startTime: "2025-09-17T08:15:22.123Z",
-        duration: 12500,
-        tags: {
-          "http.request.method": "POST",
-          "url.full": "/checkout/process",
-          "http.response.status_code": 201,
-          "span.kind": "server",
-        },
-      },
-    ],
-  },
-];
-
-const mockServices = [
-  "hp-udr-adapter",
-  "checkout-service",
-  "user-service",
-  "payment-service",
-  "inventory-service",
-  "notification-service",
-];
-
-const mockOperations = [
-  "GET /hpudradapter/management/prometheus",
-  "POST /checkout/process",
-  "GET /users/profile",
-  "POST /payments/charge",
-  "GET /inventory/stock",
-  "POST /notifications/send",
-];
+// Use comprehensive trace data from JSON file
+const mockTraces = tracesData.traces;
+const mockServices = tracesData.services;
+const mockOperations = tracesData.operations;
+const mockClusters = tracesData.clusters;
 
 export default function TracingScreen() {
   const navigate = useNavigate();
@@ -94,9 +20,15 @@ export default function TracingScreen() {
   const [timeRange, setTimeRange] = useState("1h");
   const [traceIdFilter, setTraceIdFilter] = useState("");
 
+  // ML-powered filters
+  const [onlyAnomalies, setOnlyAnomalies] = useState(false);
+  const [scoreRange, setScoreRange] = useState([0, 100]);
+  const [clusterId, setClusterId] = useState("");
+  const [onlyErrors, setOnlyErrors] = useState(false);
+  const [searchService, setSearchService] = useState("");
+
   // UI states
   const [selectedTrace, setSelectedTrace] = useState(null);
-  const [expandedSpans, setExpandedSpans] = useState(new Set());
   const [loading, setLoading] = useState(false);
 
   // Filter traces based on current filters
@@ -110,9 +42,36 @@ export default function TracingScreen() {
       const matchesTraceId =
         !traceIdFilter || trace.traceId.toLowerCase().includes(traceIdFilter.toLowerCase());
 
-      return matchesService && matchesOperation && matchesTraceId;
+      // ML-powered filters
+      const matchesAnomalies = !onlyAnomalies || trace.isAnomaly;
+      const matchesScore =
+        trace.anomalyScore >= scoreRange[0] && trace.anomalyScore <= scoreRange[1];
+      const matchesCluster = !clusterId || trace.clusterId === clusterId;
+      const matchesErrors = !onlyErrors || trace.hasErrors;
+      const matchesSearch =
+        !searchService || trace.serviceName.toLowerCase().includes(searchService.toLowerCase());
+
+      return (
+        matchesService &&
+        matchesOperation &&
+        matchesTraceId &&
+        matchesAnomalies &&
+        matchesScore &&
+        matchesCluster &&
+        matchesErrors &&
+        matchesSearch
+      );
     });
-  }, [serviceFilter, operationFilter, traceIdFilter]);
+  }, [
+    serviceFilter,
+    operationFilter,
+    traceIdFilter,
+    onlyAnomalies,
+    scoreRange,
+    clusterId,
+    onlyErrors,
+    searchService,
+  ]);
 
   // Format duration for display
   const formatDuration = (duration) => {
@@ -129,17 +88,6 @@ export default function TracingScreen() {
   // Copy to clipboard
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text);
-  };
-
-  // Toggle span expansion
-  const toggleSpan = (spanId) => {
-    const newExpanded = new Set(expandedSpans);
-    if (newExpanded.has(spanId)) {
-      newExpanded.delete(spanId);
-    } else {
-      newExpanded.add(spanId);
-    }
-    setExpandedSpans(newExpanded);
   };
 
   return (
@@ -293,7 +241,7 @@ export default function TracingScreen() {
                 onChange={(e) => setOperationFilter(e.target.value)}
                 placeholder="Search operations..."
                 style={{
-                  width: "100%",
+                  width: "84%",
                   paddingLeft: "36px",
                   paddingRight: "12px",
                   paddingTop: "8px",
@@ -365,6 +313,218 @@ export default function TracingScreen() {
                 fontFamily: "monospace",
               }}
             />
+          </div>
+
+          {/* ML-powered Filters */}
+          <div style={{ marginBottom: "16px" }}>
+            <div
+              style={{
+                fontSize: "14px",
+                fontWeight: 500,
+                marginBottom: "8px",
+                color: "#374151",
+              }}>
+              ML Analysis
+            </div>
+
+            {/* Only Anomalies Checkbox */}
+            <div style={{ marginBottom: "12px" }}>
+              <label
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  fontSize: "13px",
+                  cursor: "pointer",
+                }}>
+                <input
+                  type="checkbox"
+                  checked={onlyAnomalies}
+                  onChange={(e) => setOnlyAnomalies(e.target.checked)}
+                  style={{
+                    width: "16px",
+                    height: "16px",
+                    cursor: "pointer",
+                  }}
+                />
+                only anomalies
+              </label>
+            </div>
+
+            {/* Score Range Slider */}
+            <div style={{ marginBottom: "12px" }}>
+              <label
+                style={{
+                  display: "block",
+                  fontSize: "13px",
+                  fontWeight: 500,
+                  marginBottom: "6px",
+                  color: "#374151",
+                }}>
+                Score
+              </label>
+              <div style={{ position: "relative" }}>
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  value={scoreRange[1]}
+                  onChange={(e) => {
+                    const newMax = parseInt(e.target.value);
+                    setScoreRange([Math.min(scoreRange[0], newMax), newMax]);
+                  }}
+                  style={{
+                    width: "100%",
+                    height: "6px",
+                    background: "#e5e7eb",
+                    outline: "none",
+                    borderRadius: "3px",
+                    cursor: "pointer",
+                  }}
+                />
+                <div
+                  style={{
+                    position: "absolute",
+                    top: "-8px",
+                    left: "0",
+                    fontSize: "10px",
+                    color: "#6b7280",
+                  }}>
+                  {scoreRange[0]}
+                </div>
+                <div
+                  style={{
+                    position: "absolute",
+                    top: "-8px",
+                    right: "0",
+                    fontSize: "10px",
+                    color: "#6b7280",
+                  }}>
+                  {scoreRange[1]}
+                </div>
+                <div style={{ marginTop: "4px", fontSize: "11px", color: "#6b7280" }}>
+                  Range: {scoreRange[0]} - {scoreRange[1]}
+                </div>
+              </div>
+            </div>
+
+            {/* Cluster ID Dropdown */}
+            <div style={{ marginBottom: "12px" }}>
+              <label
+                style={{
+                  display: "block",
+                  fontSize: "13px",
+                  fontWeight: 500,
+                  marginBottom: "6px",
+                  color: "#374151",
+                }}>
+                cluster #
+              </label>
+              <select
+                value={clusterId}
+                onChange={(e) => setClusterId(e.target.value)}
+                style={{
+                  width: "100%",
+                  padding: "6px 8px",
+                  border: "1px solid #d1d5db",
+                  borderRadius: "4px",
+                  fontSize: "13px",
+                  outline: "none",
+                  background: "white",
+                }}>
+                <option value="">All clusters</option>
+                {mockClusters.map((cluster) => (
+                  <option key={cluster} value={cluster}>
+                    {cluster}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Only Errors Checkbox */}
+            <div style={{ marginBottom: "12px" }}>
+              <label
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  fontSize: "13px",
+                  cursor: "pointer",
+                }}>
+                <input
+                  type="checkbox"
+                  checked={onlyErrors}
+                  onChange={(e) => setOnlyErrors(e.target.checked)}
+                  style={{
+                    width: "16px",
+                    height: "16px",
+                    cursor: "pointer",
+                  }}
+                />
+                only errors
+              </label>
+            </div>
+
+            {/* Search Service Dropdown */}
+            <div style={{ marginBottom: "16px" }}>
+              <label
+                style={{
+                  display: "block",
+                  fontSize: "13px",
+                  fontWeight: 500,
+                  marginBottom: "6px",
+                  color: "#374151",
+                }}>
+                search
+              </label>
+              <select
+                value={searchService}
+                onChange={(e) => setSearchService(e.target.value)}
+                style={{
+                  width: "100%",
+                  padding: "6px 8px",
+                  border: "1px solid #d1d5db",
+                  borderRadius: "4px",
+                  fontSize: "13px",
+                  outline: "none",
+                  background: "white",
+                }}>
+                <option value="">All services</option>
+                {mockServices.map((service) => (
+                  <option key={service} value={service}>
+                    {service}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* Clear Filters Button */}
+          <div style={{ marginBottom: "12px" }}>
+            <button
+              onClick={() => {
+                setServiceFilter("");
+                setOperationFilter("");
+                setTraceIdFilter("");
+                setOnlyAnomalies(false);
+                setScoreRange([0, 100]);
+                setClusterId("");
+                setOnlyErrors(false);
+                setSearchService("");
+              }}
+              style={{
+                width: "100%",
+                padding: "8px 12px",
+                background: "#f3f4f6",
+                border: "1px solid #d1d5db",
+                borderRadius: "6px",
+                fontSize: "13px",
+                color: "#374151",
+                cursor: "pointer",
+                fontWeight: "500",
+              }}>
+              Clear All Filters
+            </button>
           </div>
 
           {/* Results Count */}
@@ -445,9 +605,61 @@ export default function TracingScreen() {
                       style={{
                         fontSize: "12px",
                         color: "#9ca3af",
+                        marginBottom: "4px",
                       }}>
                       {formatTimestamp(trace.startTime)} • {formatDuration(trace.duration)} •{" "}
                       {trace.spans.length} spans
+                    </div>
+                    {/* ML Indicators */}
+                    <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+                      {trace.isAnomaly && (
+                        <span
+                          style={{
+                            fontSize: "10px",
+                            padding: "2px 6px",
+                            background: "#fef3c7",
+                            color: "#92400e",
+                            borderRadius: "4px",
+                            fontWeight: "500",
+                          }}>
+                          ANOMALY
+                        </span>
+                      )}
+                      {trace.hasErrors && (
+                        <span
+                          style={{
+                            fontSize: "10px",
+                            padding: "2px 6px",
+                            background: "#fee2e2",
+                            color: "#dc2626",
+                            borderRadius: "4px",
+                            fontWeight: "500",
+                          }}>
+                          ERROR
+                        </span>
+                      )}
+                      <span
+                        style={{
+                          fontSize: "10px",
+                          padding: "2px 6px",
+                          background: "#f3f4f6",
+                          color: "#374151",
+                          borderRadius: "4px",
+                          fontWeight: "500",
+                        }}>
+                        Score: {trace.anomalyScore}
+                      </span>
+                      <span
+                        style={{
+                          fontSize: "10px",
+                          padding: "2px 6px",
+                          background: "#e0f2fe",
+                          color: "#0369a1",
+                          borderRadius: "4px",
+                          fontWeight: "500",
+                        }}>
+                        {trace.clusterId}
+                      </span>
                     </div>
                   </div>
                   <div
@@ -543,118 +755,73 @@ export default function TracingScreen() {
                     style={{
                       fontSize: "13px",
                       color: "#6b7280",
+                      marginBottom: "4px",
                     }}>
                     Started: {formatTimestamp(selectedTrace.startTime)}
+                  </div>
+                  {/* ML Information */}
+                  <div
+                    style={{ marginTop: "8px", paddingTop: "8px", borderTop: "1px solid #e5e7eb" }}>
+                    <div
+                      style={{
+                        fontSize: "12px",
+                        fontWeight: "600",
+                        marginBottom: "4px",
+                        color: "#374151",
+                      }}>
+                      ML Analysis
+                    </div>
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: "4px" }}>
+                      <span
+                        style={{
+                          fontSize: "10px",
+                          padding: "2px 6px",
+                          background: selectedTrace.isAnomaly ? "#fef3c7" : "#f3f4f6",
+                          color: selectedTrace.isAnomaly ? "#92400e" : "#374151",
+                          borderRadius: "4px",
+                          fontWeight: "500",
+                        }}>
+                        Anomaly: {selectedTrace.isAnomaly ? "Yes" : "No"}
+                      </span>
+                      <span
+                        style={{
+                          fontSize: "10px",
+                          padding: "2px 6px",
+                          background: "#f3f4f6",
+                          color: "#374151",
+                          borderRadius: "4px",
+                          fontWeight: "500",
+                        }}>
+                        Score: {selectedTrace.anomalyScore}
+                      </span>
+                      <span
+                        style={{
+                          fontSize: "10px",
+                          padding: "2px 6px",
+                          background: "#e0f2fe",
+                          color: "#0369a1",
+                          borderRadius: "4px",
+                          fontWeight: "500",
+                        }}>
+                        Cluster: {selectedTrace.clusterId}
+                      </span>
+                      <span
+                        style={{
+                          fontSize: "10px",
+                          padding: "2px 6px",
+                          background: selectedTrace.hasErrors ? "#fee2e2" : "#f0fdf4",
+                          color: selectedTrace.hasErrors ? "#dc2626" : "#059669",
+                          borderRadius: "4px",
+                          fontWeight: "500",
+                        }}>
+                        Errors: {selectedTrace.hasErrors ? "Yes" : "No"}
+                      </span>
+                    </div>
                   </div>
                 </div>
 
                 {/* Spans */}
-                <div
-                  style={{
-                    fontSize: "14px",
-                    fontWeight: 600,
-                    marginBottom: "12px",
-                  }}>
-                  Spans ({selectedTrace.spans.length})
-                </div>
-
-                {selectedTrace.spans.map((span, index) => (
-                  <div
-                    key={span.spanId}
-                    style={{
-                      border: "1px solid #e5e7eb",
-                      borderRadius: "6px",
-                      marginBottom: "8px",
-                      overflow: "hidden",
-                    }}>
-                    <div
-                      onClick={() => toggleSpan(span.spanId)}
-                      style={{
-                        padding: "12px",
-                        cursor: "pointer",
-                        background: "#f9fafb",
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "8px",
-                      }}>
-                      {expandedSpans.has(span.spanId) ? (
-                        <ChevronDown size={16} />
-                      ) : (
-                        <ChevronRight size={16} />
-                      )}
-                      <div style={{ flex: 1 }}>
-                        <div
-                          style={{
-                            fontSize: "13px",
-                            fontWeight: 500,
-                            marginBottom: "2px",
-                          }}>
-                          {span.operationName}
-                        </div>
-                        <div
-                          style={{
-                            fontSize: "12px",
-                            color: "#6b7280",
-                          }}>
-                          {span.serviceName} • {formatDuration(span.duration)}
-                        </div>
-                      </div>
-                    </div>
-
-                    {expandedSpans.has(span.spanId) && (
-                      <div style={{ padding: "12px", background: "#fff" }}>
-                        <div
-                          style={{
-                            fontSize: "12px",
-                            fontWeight: 600,
-                            marginBottom: "8px",
-                            color: "#374151",
-                          }}>
-                          Span Details
-                        </div>
-                        <div
-                          style={{
-                            fontSize: "11px",
-                            fontFamily: "monospace",
-                            background: "#f8fafc",
-                            padding: "8px",
-                            borderRadius: "4px",
-                            marginBottom: "8px",
-                          }}>
-                          <div>Span ID: {span.spanId}</div>
-                          <div>Parent: {span.parentSpanId}</div>
-                          <div>Duration: {formatDuration(span.duration)}</div>
-                        </div>
-
-                        <div
-                          style={{
-                            fontSize: "12px",
-                            fontWeight: 600,
-                            marginBottom: "8px",
-                            color: "#374151",
-                          }}>
-                          Tags
-                        </div>
-                        <div
-                          style={{
-                            fontSize: "11px",
-                            fontFamily: "monospace",
-                            background: "#f8fafc",
-                            padding: "8px",
-                            borderRadius: "4px",
-                            maxHeight: "200px",
-                            overflow: "auto",
-                          }}>
-                          {Object.entries(span.tags).map(([key, value]) => (
-                            <div key={key} style={{ marginBottom: "2px" }}>
-                              <span style={{ color: "#6b7280" }}>{key}:</span> {String(value)}
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                ))}
+                <SpansList spans={selectedTrace.spans} formatDuration={formatDuration} />
               </div>
             </div>
           ) : (
