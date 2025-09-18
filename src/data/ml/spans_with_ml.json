@@ -1,32 +1,181 @@
-{
-  "traceId": "0x9e639426dcab08997d62035b722d5189",
-  "spanId": "999079786583621150",
-  "parentSpanId": "0",
-  "serviceName": "hp-udr-adapter",
-  "operationName": "GET /hpudradapter/management/prometheus",
-  "startTime": "2025-09-17T08:12:34.567Z",
-  "duration_ms": 8300,
-
-  "http.request.method": "GET",
-  "url.full": "/hpudradapter/management/prometheus",
-  "http.response.status_code": 200,
-  "span.kind": "server",
-  "host.name": "4b9f646f4520",
-  "service.instance.id": "55ffa9f3-f126-4bad-b5b1-754ee270e65f",
-
-  "attributes": {
-    "container.id": "4b9f646f4520a308ac8231c7d9889f2b...",
-    "os.description": "Linux 4.18.0-553.8.1.el8_10.x86_64",
-    "process.runtime.version": "11.0.10+9",
-    "telemetry.sdk.version": "1.54.0",
-    "...": "..."
+[
+  {
+    "traceId": "0x9e639426dcab08997d62035b722d5189",
+    "spanId": "999079786583621150",
+    "parentSpanId": "0",
+    "serviceName": "hp-udr-adapter",
+    "operationName": "GET /hpudradapter/management/prometheus",
+    "startTime": "2025-09-17T08:12:34.567Z",
+    "duration_ms": 8300,
+    "http.request.method": "GET",
+    "url.full": "/hpudradapter/management/prometheus",
+    "http.response.status_code": 200,
+    "span.kind": "server",
+    "host.name": "4b9f646f4520",
+    "service.instance.id": "55ffa9f3-f126-4bad-b5b1-754ee270e65f",
+    "attributes": {
+      "container.id": "4b9f646f4520a308ac8231c7d9889f2b",
+      "os.description": "Linux 4.18.0-553.8.1.el8_10.x86_64",
+      "process.runtime.version": "11.0.10+9",
+      "telemetry.sdk.version": "1.54.0",
+      "deployment.env": "production",
+      "git.commit": "abc123def456",
+      "build.id": "build-789"
+    },
+    "ml": {
+      "anomaly_score": 0.91,
+      "anomaly_flag": true,
+      "cluster_id": 2,
+      "expected_ms": 4200,
+      "delta_ms": 4100
+    }
   },
-
-  "ml": {
-    "anomaly_score": 0.91,
-    "anomaly_flag": true,
-    "cluster_id": 2,
-    "expected_ms": 4200,
-    "delta_ms": 4100
+  {
+    "traceId": "0x9e639426dcab08997d62035b722d5189",
+    "spanId": "999079786583621151",
+    "parentSpanId": "999079786583621150",
+    "serviceName": "database",
+    "operationName": "SELECT users",
+    "startTime": "2025-09-17T08:12:35.000Z",
+    "duration_ms": 1200,
+    "db.statement": "SELECT * FROM users WHERE id = ?",
+    "db.system": "postgresql",
+    "span.kind": "client",
+    "host.name": "db-server-01",
+    "service.instance.id": "db-instance-001",
+    "attributes": {
+      "container.id": "db-container-456",
+      "os.description": "Linux 5.4.0-74-generic",
+      "process.runtime.version": "13.0.2+9",
+      "deployment.env": "production",
+      "git.commit": "def456ghi789",
+      "build.id": "build-456"
+    },
+    "ml": {
+      "anomaly_score": 0.15,
+      "anomaly_flag": false,
+      "cluster_id": 1,
+      "expected_ms": 1100,
+      "delta_ms": 100
+    }
+  },
+  {
+    "traceId": "0x8f529315cb9a07886e73024c611c4078",
+    "spanId": "888888888888888888",
+    "parentSpanId": "0",
+    "serviceName": "checkout-service",
+    "operationName": "POST /checkout/process",
+    "startTime": "2025-09-17T08:15:22.123Z",
+    "duration_ms": 12500,
+    "http.request.method": "POST",
+    "url.full": "/checkout/process",
+    "http.response.status_code": 500,
+    "span.kind": "server",
+    "host.name": "checkout-server-02",
+    "service.instance.id": "checkout-instance-002",
+    "attributes": {
+      "container.id": "checkout-container-789",
+      "os.description": "Linux 4.18.0-553.8.1.el8_10.x86_64",
+      "process.runtime.version": "11.0.10+9",
+      "deployment.env": "production",
+      "git.commit": "ghi789jkl012",
+      "build.id": "build-123"
+    },
+    "ml": {
+      "anomaly_score": 0.85,
+      "anomaly_flag": true,
+      "cluster_id": 3,
+      "expected_ms": 8500,
+      "delta_ms": 4000
+    }
+  },
+  {
+    "traceId": "0xa1b2c3d4e5f6789012345678901234ab",
+    "spanId": "777777777777777777",
+    "parentSpanId": "0",
+    "serviceName": "user-service",
+    "operationName": "GET /users/profile",
+    "startTime": "2025-09-17T08:18:45.789Z",
+    "duration_ms": 4500,
+    "http.request.method": "GET",
+    "url.full": "/users/profile",
+    "http.response.status_code": 200,
+    "span.kind": "server",
+    "host.name": "user-server-03",
+    "service.instance.id": "user-instance-003",
+    "attributes": {
+      "container.id": "user-container-012",
+      "os.description": "Linux 5.4.0-74-generic",
+      "process.runtime.version": "13.0.2+9",
+      "deployment.env": "production",
+      "git.commit": "jkl012mno345",
+      "build.id": "build-234"
+    },
+    "ml": {
+      "anomaly_score": 0.25,
+      "anomaly_flag": false,
+      "cluster_id": 1,
+      "expected_ms": 4200,
+      "delta_ms": 300
+    }
+  },
+  {
+    "traceId": "0xb2c3d4e5f6789012345678901234abcd",
+    "spanId": "666666666666666666",
+    "parentSpanId": "0",
+    "serviceName": "payment-gateway",
+    "operationName": "POST /payments/charge",
+    "startTime": "2025-09-17T08:20:15.234Z",
+    "duration_ms": 18500,
+    "http.request.method": "POST",
+    "url.full": "/payments/charge",
+    "http.response.status_code": 400,
+    "span.kind": "server",
+    "host.name": "payment-server-04",
+    "service.instance.id": "payment-instance-004",
+    "attributes": {
+      "container.id": "payment-container-345",
+      "os.description": "Linux 4.18.0-553.8.1.el8_10.x86_64",
+      "process.runtime.version": "11.0.10+9",
+      "deployment.env": "production",
+      "git.commit": "mno345pqr678",
+      "build.id": "build-345"
+    },
+    "ml": {
+      "anomaly_score": 0.92,
+      "anomaly_flag": true,
+      "cluster_id": 2,
+      "expected_ms": 12000,
+      "delta_ms": 6500
+    }
+  },
+  {
+    "traceId": "0xb2c3d4e5f6789012345678901234abcd",
+    "spanId": "666666666666666667",
+    "parentSpanId": "666666666666666666",
+    "serviceName": "external-payment-api",
+    "operationName": "POST /api/v1/charge",
+    "startTime": "2025-09-17T08:20:16.000Z",
+    "duration_ms": 12000,
+    "http.request.method": "POST",
+    "url.full": "https://api.stripe.com/v1/charges",
+    "http.response.status_code": 400,
+    "span.kind": "client",
+    "host.name": "payment-server-04",
+    "service.instance.id": "payment-instance-004",
+    "attributes": {
+      "container.id": "payment-container-345",
+      "os.description": "Linux 4.18.0-553.8.1.el8_10.x86_64",
+      "deployment.env": "production",
+      "git.commit": "mno345pqr678",
+      "build.id": "build-345"
+    },
+    "ml": {
+      "anomaly_score": 0.88,
+      "anomaly_flag": true,
+      "cluster_id": 2,
+      "expected_ms": 8000,
+      "delta_ms": 4000
+    }
   }
-}
+]

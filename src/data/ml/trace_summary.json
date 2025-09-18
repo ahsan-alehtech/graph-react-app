@@ -1,9 +1,34 @@
-{
+[
+  {
     "traceId": "0x9e639426dcab08997d62035b722d5189",
-    "span_count": 18,
-    "anom_count": 3,
-    "trace_anom_max": 0.96,
-    "trace_anom_mean": 0.21,
+    "span_count": 2,
+    "anom_count": 1,
+    "trace_anom_max": 0.91,
+    "trace_anom_mean": 0.53,
+    "trace_anomaly_flag": true
+  },
+  {
+    "traceId": "0x8f529315cb9a07886e73024c611c4078",
+    "span_count": 1,
+    "anom_count": 1,
+    "trace_anom_max": 0.85,
+    "trace_anom_mean": 0.85,
+    "trace_anomaly_flag": true
+  },
+  {
+    "traceId": "0xa1b2c3d4e5f6789012345678901234ab",
+    "span_count": 1,
+    "anom_count": 0,
+    "trace_anom_max": 0.25,
+    "trace_anom_mean": 0.25,
+    "trace_anomaly_flag": false
+  },
+  {
+    "traceId": "0xb2c3d4e5f6789012345678901234abcd",
+    "span_count": 2,
+    "anom_count": 2,
+    "trace_anom_max": 0.92,
+    "trace_anom_mean": 0.9,
     "trace_anomaly_flag": true
   }
-  
+]

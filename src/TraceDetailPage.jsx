@@ -10,6 +10,8 @@ import {
   CheckCircle,
 } from "lucide-react";
 import tracesData from "./data/tracesData.json";
+import spansWithML from "./data/ml/spans_with_ml.json";
+import traceSummary from "./data/ml/trace_summary.json";
 
 const TraceDetailPage = () => {
   const { traceId } = useParams();
@@ -18,10 +20,43 @@ const TraceDetailPage = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Find the trace by ID
+    // Find the trace by ID and enrich with ML data
     const foundTrace = tracesData.traces.find((t) => t.traceId === traceId);
     if (foundTrace) {
-      setTrace(foundTrace);
+      // Get ML spans for this trace
+      const mlSpans = spansWithML.filter((span) => span.traceId === traceId);
+
+      // Get trace summary
+      const summary = traceSummary.find((s) => s.traceId === traceId);
+
+      // Enrich spans with ML data
+      const enrichedSpans = foundTrace.spans.map((span) => {
+        const mlSpan = mlSpans.find((ml) => ml.spanId === span.spanId);
+        return {
+          ...span,
+          ...mlSpan,
+          // Ensure we have the original span data as fallback
+          duration: mlSpan?.duration_ms || span.duration,
+          tags: {
+            ...span.tags,
+            ...mlSpan?.attributes,
+            // Add ML fields to tags for easy access
+            ...(mlSpan?.ml && {
+              "ml.anomaly_score": mlSpan.ml.anomaly_score,
+              "ml.anomaly_flag": mlSpan.ml.anomaly_flag,
+              "ml.cluster_id": mlSpan.ml.cluster_id,
+              "ml.expected_ms": mlSpan.ml.expected_ms,
+              "ml.delta_ms": mlSpan.ml.delta_ms,
+            }),
+          },
+        };
+      });
+
+      setTrace({
+        ...foundTrace,
+        spans: enrichedSpans,
+        mlSummary: summary,
+      });
     }
     setLoading(false);
   }, [traceId]);
@@ -41,11 +76,25 @@ const TraceDetailPage = () => {
   };
 
   const getSpanColor = (span, index) => {
+    // ML-based coloring logic
+    const anomalyFlag = span.tags?.["ml.anomaly_flag"];
+    const anomalyScore = span.tags?.["ml.anomaly_score"] || 0;
+    const statusCode = span.tags?.["http.response.status_code"] || 200;
+
+    // Red → ml.anomaly_flag === true
+    if (anomalyFlag === true) {
+      return "#ef4444"; // red
+    }
+
+    // Orange → ml.anomaly_score >= 0.8 OR http.response.status_code >= 400
+    if (anomalyScore >= 0.8 || statusCode >= 400) {
+      return "#f59e0b"; // amber/orange
+    }
+
+    // Neutral → otherwise (use index-based colors)
     const colors = [
       "#3b82f6", // blue
       "#10b981", // emerald
-      "#f59e0b", // amber
-      "#ef4444", // red
       "#8b5cf6", // violet
       "#06b6d4", // cyan
       "#84cc16", // lime
@@ -258,12 +307,12 @@ const TraceDetailPage = () => {
                 style={{
                   fontSize: "11px",
                   padding: "4px 8px",
-                  background: trace.isAnomaly ? "#fef3c7" : "#f3f4f6",
-                  color: trace.isAnomaly ? "#92400e" : "#374151",
+                  background: trace.mlSummary?.trace_anomaly_flag ? "#fef3c7" : "#f3f4f6",
+                  color: trace.mlSummary?.trace_anomaly_flag ? "#92400e" : "#374151",
                   borderRadius: "4px",
                   fontWeight: "500",
                 }}>
-                {trace.isAnomaly ? "🚨 Anomaly" : "✅ Normal"}
+                {trace.mlSummary?.trace_anomaly_flag ? "🚨 Anomaly" : "✅ Normal"}
               </span>
 
               <span
@@ -275,7 +324,7 @@ const TraceDetailPage = () => {
                   borderRadius: "4px",
                   fontWeight: "500",
                 }}>
-                Score: {trace.anomalyScore}
+                Max Score: {trace.mlSummary?.trace_anom_max?.toFixed(2) || "—"}
               </span>
 
               <span
@@ -287,19 +336,19 @@ const TraceDetailPage = () => {
                   borderRadius: "4px",
                   fontWeight: "500",
                 }}>
-                {trace.clusterId}
+                Anomalies: {trace.mlSummary?.anom_count || 0}/{trace.mlSummary?.span_count || 0}
               </span>
 
               <span
                 style={{
                   fontSize: "11px",
                   padding: "4px 8px",
-                  background: trace.hasErrors ? "#fee2e2" : "#f0fdf4",
-                  color: trace.hasErrors ? "#dc2626" : "#059669",
+                  background: "#f3f4f6",
+                  color: "#374151",
                   borderRadius: "4px",
                   fontWeight: "500",
                 }}>
-                {trace.hasErrors ? "❌ Errors" : "✅ No Errors"}
+                Mean Score: {trace.mlSummary?.trace_anom_mean?.toFixed(2) || "—"}
               </span>
             </div>
           </div>
@@ -355,6 +404,61 @@ const TraceDetailPage = () => {
             }}>
             Timeline View
           </h2>
+
+          {/* Color Legend */}
+          <div
+            style={{
+              marginBottom: "16px",
+              padding: "12px",
+              background: "#f8fafc",
+              borderRadius: "6px",
+              border: "1px solid #e5e7eb",
+            }}>
+            <div
+              style={{
+                fontSize: "12px",
+                fontWeight: "600",
+                marginBottom: "8px",
+                color: "#374151",
+              }}>
+              Color Legend
+            </div>
+            <div style={{ display: "flex", gap: "16px", fontSize: "11px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+                <div
+                  style={{
+                    width: "12px",
+                    height: "12px",
+                    background: "#ef4444",
+                    borderRadius: "2px",
+                  }}
+                />
+                <span>Anomaly (ml.anomaly_flag = true)</span>
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+                <div
+                  style={{
+                    width: "12px",
+                    height: "12px",
+                    background: "#f59e0b",
+                    borderRadius: "2px",
+                  }}
+                />
+                <span>High Score (≥0.8) or Error (≥400)</span>
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+                <div
+                  style={{
+                    width: "12px",
+                    height: "12px",
+                    background: "#3b82f6",
+                    borderRadius: "2px",
+                  }}
+                />
+                <span>Normal</span>
+              </div>
+            </div>
+          </div>
 
           {/* Timeline Container */}
           <div
@@ -531,8 +635,49 @@ const TraceDetailPage = () => {
                       <div>Span ID: {span.spanId}</div>
                       <div>Parent: {span.parentSpanId}</div>
                       <div>Duration: {formatDuration(span.duration)}</div>
+                      <div>HTTP Method: {span.tags?.["http.request.method"] || "—"}</div>
+                      <div>URL: {span.tags?.["url.full"] || "—"}</div>
+                      <div>Status: {span.tags?.["http.response.status_code"] || "—"}</div>
+                      <div>Kind: {span.tags?.["span.kind"] || "—"}</div>
+                      <div>Host: {span.tags?.["host.name"] || "—"}</div>
+                      <div>Instance: {span.tags?.["service.instance.id"] || "—"}</div>
                     </div>
                   </div>
+
+                  {/* ML Information */}
+                  {span.tags?.["ml.anomaly_score"] !== undefined && (
+                    <div style={{ marginBottom: "12px" }}>
+                      <h4
+                        style={{
+                          fontSize: "12px",
+                          fontWeight: "600",
+                          marginBottom: "8px",
+                          color: "#374151",
+                        }}>
+                        ML Analysis
+                      </h4>
+                      <div
+                        style={{
+                          background: "#f8fafc",
+                          padding: "8px 12px",
+                          borderRadius: "4px",
+                          fontSize: "11px",
+                          fontFamily: "monospace",
+                        }}>
+                        <div>
+                          Anomaly Score: {span.tags?.["ml.anomaly_score"]?.toFixed(3) || "—"}
+                        </div>
+                        <div>
+                          Anomaly Flag: {span.tags?.["ml.anomaly_flag"] ? "🚨 True" : "✅ False"}
+                        </div>
+                        <div>Cluster ID: {span.tags?.["ml.cluster_id"] || "—"}</div>
+                        <div>
+                          Expected Duration: {formatDuration(span.tags?.["ml.expected_ms"] || 0)}
+                        </div>
+                        <div>Delta: {formatDuration(span.tags?.["ml.delta_ms"] || 0)}</div>
+                      </div>
+                    </div>
+                  )}
 
                   <div>
                     <h4
@@ -542,7 +687,7 @@ const TraceDetailPage = () => {
                         marginBottom: "8px",
                         color: "#374151",
                       }}>
-                      Tags
+                      Attributes
                     </h4>
                     <div
                       style={{
@@ -554,7 +699,7 @@ const TraceDetailPage = () => {
                         maxHeight: "150px",
                         overflow: "auto",
                       }}>
-                      {Object.entries(span.tags).map(([key, value]) => (
+                      {Object.entries(span.tags || {}).map(([key, value]) => (
                         <div key={key} style={{ marginBottom: "2px" }}>
                           <span style={{ color: "#6b7280" }}>{key}:</span> {String(value)}
                         </div>
