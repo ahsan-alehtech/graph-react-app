@@ -1,6 +1,62 @@
-{
-    "serviceName": "checkout",
+[
+  {
+    "serviceName": "hp-udr-adapter",
+    "http.response.status_code": 200,
+    "count": 15
+  },
+  {
+    "serviceName": "hp-udr-adapter",
     "http.response.status_code": 500,
+    "count": 3
+  },
+  {
+    "serviceName": "checkout-service",
+    "http.response.status_code": 200,
     "count": 42
+  },
+  {
+    "serviceName": "checkout-service",
+    "http.response.status_code": 500,
+    "count": 8
+  },
+  {
+    "serviceName": "user-service",
+    "http.response.status_code": 200,
+    "count": 78
+  },
+  {
+    "serviceName": "user-service",
+    "http.response.status_code": 404,
+    "count": 5
+  },
+  {
+    "serviceName": "payment-gateway",
+    "http.response.status_code": 200,
+    "count": 25
+  },
+  {
+    "serviceName": "payment-gateway",
+    "http.response.status_code": 400,
+    "count": 12
+  },
+  {
+    "serviceName": "external-payment-api",
+    "http.response.status_code": 200,
+    "count": 20
+  },
+  {
+    "serviceName": "external-payment-api",
+    "http.response.status_code": 400,
+    "count": 7
+  },
+  {
+    "serviceName": "database",
+    "http.response.status_code": 200,
+    "count": 150
+  },
+  {
+    "serviceName": "database",
+    "http.response.status_code": 500,
+    "count": 2
   }
-  
+]
