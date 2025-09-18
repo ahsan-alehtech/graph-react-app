@@ -682,7 +682,23 @@ export default function TracingScreen() {
                       }}>
                       <Copy size={12} />
                     </button>
-                    <ExternalLink size={14} color="#6b7280" />
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate(`/trace/${trace.traceId}`);
+                      }}
+                      style={{
+                        padding: "4px",
+                        border: "1px solid #d1d5db",
+                        borderRadius: "4px",
+                        background: "#fff",
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}>
+                      <ExternalLink size={12} color="#6b7280" />
+                    </button>
                   </div>
                 </div>
               </div>
